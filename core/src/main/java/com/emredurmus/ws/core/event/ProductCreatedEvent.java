@@ -1,4 +1,4 @@
-package com.emredurmus.productservice.service.events;
+package com.emredurmus.ws.core.event;
 
 import java.math.BigDecimal;
 

@@ -1,7 +1,7 @@
 package com.emredurmus.productservice.service;
 
 import com.emredurmus.productservice.model.CreateProductModel;
-import com.emredurmus.productservice.service.events.ProductCreatedEvent;
+import com.emredurmus.ws.core.event.ProductCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -9,7 +9,6 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ProductServiceImpl implements ProductService {
