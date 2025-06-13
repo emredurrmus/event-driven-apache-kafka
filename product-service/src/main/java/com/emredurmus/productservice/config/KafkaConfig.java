@@ -1,6 +1,6 @@
 package com.emredurmus.productservice.config;
 
-import com.emredurmus.productservice.service.events.ProductCreatedEvent;
+import com.emredurmus.ws.core.event.ProductCreatedEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
