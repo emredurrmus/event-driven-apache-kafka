@@ -27,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public String createProduct(CreateProductModel productModel) {
+    public String createProduct(CreateProductModel productModel) throws Exception {
         String productId = UUID.randomUUID().toString();
 
         // TODO: Save product to database
@@ -39,20 +39,18 @@ public class ProductServiceImpl implements ProductService {
                 productModel.getQuantity()
         );
 
-       CompletableFuture<SendResult<String, ProductCreatedEvent>> future =
-               kafkaTemplate.send(CREATE_PRODUCT_TOPIC, productId, productCreatedEvent);
+        LOGGER.info("Before publishing product created event");
 
-       future.whenComplete((r, e) -> {
-           if (e != null) {
-               LOGGER.error("Error sending message", e);
-           } else {
-               LOGGER.info("Message sent to topic: " + r.getRecordMetadata());
-           }
-       });
+        SendResult<String, ProductCreatedEvent> result = kafkaTemplate.send(CREATE_PRODUCT_TOPIC, productId, productCreatedEvent).get();
 
-       LOGGER.info("Product created: " + productId);
+        LOGGER.info("Partitions" + result.getRecordMetadata().partition());
+        LOGGER.info("Topic" + result.getRecordMetadata().topic());
+        LOGGER.info("Offset" + result.getRecordMetadata().offset());
 
-       return productId;
+
+        LOGGER.info("Returning product id");
+
+        return productId;
     }
 
 
