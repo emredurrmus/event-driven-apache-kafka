@@ -2,6 +2,7 @@ package com.emredurmus.productservice.service;
 
 import com.emredurmus.productservice.model.CreateProductModel;
 import com.emredurmus.ws.core.event.ProductCreatedEvent;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -40,7 +41,13 @@ public class ProductServiceImpl implements ProductService {
 
         LOGGER.info("Before publishing product created event");
 
-        SendResult<String, ProductCreatedEvent> result = kafkaTemplate.send(CREATE_PRODUCT_TOPIC, productId, productCreatedEvent).get();
+        ProducerRecord<String, ProductCreatedEvent> producerRecord =
+                new ProducerRecord<>(
+                        CREATE_PRODUCT_TOPIC, productId, productCreatedEvent
+                );
+        producerRecord.headers().add("messageId", UUID.randomUUID().toString().getBytes());
+
+        SendResult<String, ProductCreatedEvent> result = kafkaTemplate.send(producerRecord).get();
 
         LOGGER.info("Partitions" + result.getRecordMetadata().partition());
         LOGGER.info("Topic" + result.getRecordMetadata().topic());
